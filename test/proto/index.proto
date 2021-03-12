@@ -1,0 +1,34 @@
+syntax = "proto3";
+package UserPackage;
+
+enum SexEnum {
+  MAN = 0;              
+  WOMAN = 1;            
+  UNKNOWN = 2;          
+}
+
+message UserList {
+  string username = 1;    
+  int32 ageFrom = 2;      
+  int32 ageTo = 3;        
+  SexEnum sex = 4;            
+}
+
+message UserListVO {
+  string userGroupName = 1;      
+  repeated UserInfo userInfo = 2; 
+
+  message UserInfo {
+    string username = 1;
+    string realName = 2;
+    bool isVip = 3;
+    SexEnum sex = 4;
+    int32 age = 5;
+  }
+}
+
+message DataResponse {
+  int32 code = 1;
+  string msg = 2;
+  bytes data = 3;
+}
