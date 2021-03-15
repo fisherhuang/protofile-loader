@@ -1,4 +1,4 @@
-const {getOptions} =require("loader-utils");
+const {getOptions,parseQuery} =require("loader-utils");
 const protobuf =require("protobufjs");
 const staticTarget = require('protobufjs/cli/targets/static-module');
 
@@ -19,23 +19,30 @@ const defaultOpts = {
   forceEnumString:false,//枚举的输出
 };
 
-const ProtofileLoader =function(source){
-
+const ProtofileLoader =function(source,map,meta){
   const callback=this.async();
   const customOptions=getOptions(this)||{};
-  const _opts=Object.assign({},defaultOpts,customOptions);
+
+  let query={};
+  //读取参数
+  if(this.resourceQuery)
+  {
+    query=parseQuery(this.resourceQuery);
+  }
+
+  //合并定制化的和参数个性化的设置
+  const _opts=Object.assign({},defaultOpts,customOptions,query);
 
   try{
-    protobuf.load(this.resourcePath).then((err,root)=>{
-      if(_opts.json)
-      {
-  
-      }
-      else
-        staticTarget(root,_opts,function(err,output){
-          callback(err,output)
-        })
-    })
+    const _root=protobuf.loadSync(this.resourcePath);
+    if(_opts.json)
+    {
+
+    }
+    else
+      staticTarget(_root,_opts,function(err,output){
+        callback(err,output)
+      })
   }
   catch(ex){
     console.log(ex,"ex");

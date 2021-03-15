@@ -2,6 +2,7 @@ const path=require("path");
 
 module.exports={
   mode:"development",
+  watch:true,
   entry:{
     index:"./test/index.test.js"
   },
